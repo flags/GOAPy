@@ -2,7 +2,6 @@ from goapy import World, Action_List
 
 if __name__ == '__main__':
 	import time
-	import sys
 
 	_world = World('hungry', 'has_food', 'in_kitchen', 'tired', 'in_bed')
 	_world.set_start_state(hungry=True, has_food=False, in_kitchen=False, tired=True, in_bed=False)
