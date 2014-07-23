@@ -39,9 +39,19 @@ class World:
 		return _new_state
 
 	def set_start_state(self, **kwargs):
+		_invalid_states = set(kwargs.keys()) - set(self.values.keys())
+
+		if _invalid_states:
+			raise Exception('Invalid states for world start state: %s' % ', '.join(list(_invalid_states)))
+
 		self.start_state = self.state(**kwargs)
 
 	def set_goal_state(self, **kwargs):
+		_invalid_states = set(kwargs.keys()) - set(self.values.keys())
+
+		if _invalid_states:
+			raise Exception('Invalid states for world goal state: %s' % ', '.join(list(_invalid_states)))
+
 		self.goal_state = self.state(**kwargs)
 
 	def set_action_list(self, action_list):
@@ -129,7 +139,7 @@ def conditions_are_met(state_1, state_2):
 
 def node_in_list(node, node_list):
 	for next_node in node_list.values():
-		if node['state'] == next_node['state']:
+		if node['state'] == next_node['state'] and node['name'] == next_node['name']:
 			return True
 
 	return False
@@ -184,8 +194,7 @@ def walk_path(path):
 			node = path['nodes'][_lowest['node']]
 
 		else:
-			print 'Nothing'
-			return
+			return []
 		
 		################################
 		##Remove node with lowest rank##
@@ -222,37 +231,32 @@ def walk_path(path):
 		_neighbors = []
 		
 		for action_name in path['action_nodes']:
-			if conditions_are_met(node['state'], path['action_nodes'][action_name]['state']):
-				path['node_id'] += 1
-
-				_c_node = node.copy()
-				_c_node['state'] = node['state'].copy()
-				_c_node['id'] = path['node_id']
-
-				for key in path['reactions'][action_name]:
-					_value = path['reactions'][action_name][key]
-
-					if _value == -1:
-						continue
-
-					if _c_node['state'][key] == -1:
-						continue
-
-					_c_node['name'] = action_name
-					_c_node['state'][key] = _value
-
-			else:
+			if not conditions_are_met(node['state'], path['action_nodes'][action_name]['state']):
 				continue
+
+			path['node_id'] += 1
+
+			_c_node = node.copy()
+			_c_node['state'] = node['state'].copy()
+			_c_node['id'] = path['node_id']
+			_c_node['name'] = action_name
+
+			for key in path['reactions'][action_name]:
+				_value = path['reactions'][action_name][key]
+
+				if _value == -1:
+					continue
+
+				if _c_node['state'][key] == -1:
+					continue
+
+				_c_node['state'][key] = _value
 			
 			path['nodes'][_c_node['id']] = _c_node
 			_neighbors.append(_c_node)
-		
-		for next_node in _neighbors:
-			if next_node['name'] in path['weight_table']:
-				_g_cost = node['g'] + path['weight_table'][next_node['name']]
-			else:
-				_g_cost = node['g'] + 1
 
+		for next_node in _neighbors:
+			_g_cost = node['g'] + path['weight_table'][next_node['name']]
 			_in_olist, _in_clist = node_in_list(next_node, _olist), node_in_list(next_node, _clist)
 			
 			if _in_olist and _g_cost < next_node['g']:
