@@ -26,6 +26,48 @@
 
 
 class World:
+	def __init__(self):
+		self.planners = []
+		self.plans = []
+
+	def add_planner(self, planner):
+		self.planners.append(planner)
+
+	def calculate(self):
+		for planner in self.planners:
+			self.plans.append(planner.calculate())
+
+	def get_plan(self, debug=False):
+		_plans = {}
+
+		for plan in self.plans:
+			_plan_cost = sum([action['g'] for action in plan])
+
+			if _plan_cost in _plans:
+				_plans[_plan_cost].append(plan)
+			else:
+				_plans[_plan_cost] = [plan]
+
+		_sorted_plans = _plans.keys()
+		_sorted_plans.sort()
+
+		if debug:
+			_i = 1
+			
+			for plan_score in _sorted_plans:
+				for plan in _plans[plan_score]:
+					print _i
+
+					for action in plan:
+						print '\t', action['name']
+
+					_i += 1
+
+					print '\n\tTotal cost: %s\n' % plan_score
+
+		return _plans
+
+class Planner:
 	def __init__(self, *keys):
 		self.start_state = None
 		self.goal_state = None
@@ -60,9 +102,9 @@ class World:
 	def calculate(self):
 		return astar(self.start_state,
 					 self.goal_state,
-					 self.action_list.conditions,
-					 self.action_list.reactions,
-					 self.action_list.weights)
+					 {c: self.action_list.conditions[c].copy() for c in self.action_list.conditions},
+					 {r: self.action_list.reactions[r].copy() for r in self.action_list.reactions},
+					 self.action_list.weights.copy())
 
 class Action_List:
 	def __init__(self):
@@ -93,6 +135,9 @@ class Action_List:
 		self.reactions[key].update(kwargs)
 
 	def set_weight(self, key, value):
+		if not key in self.conditions:
+			raise Exception('Trying to set weight \'%s\' without matching condition.' % key)
+
 		self.weights[key] = value
 
 
