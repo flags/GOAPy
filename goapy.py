@@ -34,6 +34,8 @@ class World:
 		self.planners.append(planner)
 
 	def calculate(self):
+		self.plans = []
+		
 		for planner in self.planners:
 			self.plans.append(planner.calculate())
 
