@@ -66,8 +66,8 @@ class World:
 					_i += 1
 
 					print '\n\tTotal cost: %s\n' % plan_score
-
-		return _plans
+		
+		return [_plans[p][0] for p in _sorted_plans]
 
 class Planner:
 	def __init__(self, *keys):
