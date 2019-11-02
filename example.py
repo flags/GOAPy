@@ -32,6 +32,6 @@ if __name__ == '__main__':
 	_took_time = time.time() - _t
 
 	for path in _path:
-		print _path.index(path)+1, path['name']
+		print(_path.index(path)+1, path['name'])
 
-	print '\nTook:', _took_time
+	print('\nTook:', _took_time)

@@ -58,14 +58,14 @@ class World:
 			
 			for plan_score in _sorted_plans:
 				for plan in _plans[plan_score]:
-					print _i
+					print(_i)
 
 					for action in plan:
-						print '\t', action['name']
+						print('\t', action['name'])
 
 					_i += 1
 
-					print '\n\tTotal cost: %s\n' % plan_score
+					print('\n\tTotal cost: %s\n' % plan_score)
 		
 		return [_plans[p][0] for p in _sorted_plans]
 
@@ -173,6 +173,7 @@ def distance_to_state(state_1, state_2):
 	return _score
 
 def conditions_are_met(state_1, state_2):
+        # print state_1, state_2
 	for key in state_2.keys():
 		_value = state_2[key]
 
