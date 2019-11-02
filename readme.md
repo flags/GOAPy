@@ -1,9 +1,18 @@
 # GOAPy
-### Written by flags, 2014 (https://github.com/flags)
+### Written by flags, 2014, 2019 (https://github.com/flags)
+
+## About
+
+This is a Python implementation of GOAP (Goal-Oriented Action Planning), a
+generic architecture for autonomous AI.
+
+GOAPy was written in 2014 and updated in 2019 to work with Python 3. It predates
+other libraries of the same name and is not to be confused with `GOApy`.
+
+GOAPy is simple in design and can be set up with only a few lines of code. It
+supports weighted actions and has debug text for tracking planner outcomes.
 
 ## About GOAP
-
-Goal-Oriented Action Planning is a generic architecture for autonomous AI.
 
 Created by Jeff Orkin, GOAP is employed by a variety of AAA game titles, known for its high level of flexibility and ease-of-use. Those interested in learning more should check out [Jeff's website.](http://alumni.media.mit.edu/~jorkin/goap.html)
 
